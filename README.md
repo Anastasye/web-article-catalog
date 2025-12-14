@@ -6,7 +6,6 @@
 ## Технологии
 - **Backend**: Spring Boot 3.2.4
 - **Frontend**: Thymeleaf, CSS
-- **База данных**: H2 (in-memory)
 - **Безопасность**: Spring Security
 - **Сборка**: Maven
 - **Тестирование**: JUnit 5, Mockito
@@ -31,4 +30,5 @@
 1. Клонировать репозиторий:
 ```bash
 git clone https://github.com/your-username/web-article-catalog.git
+
 cd web-article-catalog
