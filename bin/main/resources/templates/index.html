@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог статей</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📚 Каталог статей</h1>
+            <div class="auth-section">
+                <span sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/login}" class="btn btn-primary">Войти</a>
+                    <a th:href="@{/register}" class="btn btn-secondary">Регистрация</a>
+                </span>
+                <span sec:authorize="isAuthenticated()">
+                    <span sec:authentication="name"></span>
+                    <a th:href="@{/logout}" class="btn btn-logout">Выйти</a>
+                </span>
+            </div>
+        </header>
+
+        <main>
+            <div sec:authorize="!isAuthenticated()">
+                <section class="welcome-section">
+                    <h2>Добро пожаловать в каталог статей!</h2>
+                    <p>Для доступа к функциям каталога необходимо войти в систему.</p>
+
+                    <div class="about-section">
+                        <h3>О каталоге</h3>
+                        <p>Система позволяет хранить научные статьи, организовывать их по категориям и осуществлять
+                            поиск по различным критериям.</p>
+                    </div>
+
+                    <div class="cta-buttons">
+                        <a th:href="@{/register}" class="btn btn-primary btn-large">Начать использование</a>
+                    </div>
+                </section>
+            </div>
+
+            <div sec:authorize="isAuthenticated()">
+                <nav class="main-nav">
+                    <a th:href="@{/}" class="nav-link active">Главная</a>
+                    <a th:href="@{/articles}" class="nav-link">Все статьи</a>
+                    <a th:href="@{/articles/my}" class="nav-link">Мои статьи</a>
+                    <a th:href="@{/articles/add}" class="nav-link">Добавить статью</a>
+                    <a th:href="@{/user/profile}" class="nav-link">Профиль</a>
+                </nav>
+
+                <section class="dashboard">
+                    <h2>Добро пожаловать, <span sec:authentication="name"></span>!</h2>
+
+                    <div class="quick-actions">
+                        <a th:href="@{/articles/add}" class="btn btn-primary">
+                            📤 Добавить новую статью
+                        </a>
+                        <a th:href="@{/articles/my}" class="btn btn-secondary">
+                            📁 Мои статьи
+                        </a>
+                        <a th:href="@{/articles}" class="btn btn-info">
+                            🔍 Поиск статей
+                        </a>
+                    </div>
+
+                    <div class="welcome-message">
+                        <p>Используйте навигацию выше для доступа к функциям каталога:</p>
+                        <ul>
+                            <li><strong>Все статьи</strong> - просмотр и поиск всех статей в системе</li>
+                            <li><strong>Мои статьи</strong> - управление вашими статьями</li>
+                            <li><strong>Добавить статью</strong> - загрузка новой статьи</li>
+                            <li><strong>Профиль</strong> - настройки вашего аккаунта</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+    </div>
+</body>
+
+</html>

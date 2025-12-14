@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Просмотр статьи</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📚 Каталог статей</h1>
+            <div class="auth-section">
+                <span th:text="${#authentication.name}">Пользователь</span>
+                <a th:href="@{/logout}" class="btn btn-logout">Выйти</a>
+            </div>
+        </header>
+
+        <nav class="main-nav">
+            <a th:href="@{/}" class="nav-link">Главная</a>
+            <a th:href="@{/articles}" class="nav-link">Все статьи</a>
+            <a th:href="@{/articles/my}" class="nav-link">Мои статьи</a>
+            <a th:href="@{/articles/add}" class="nav-link">Добавить статью</a>
+            <a th:href="@{/user/profile}" class="nav-link">Профиль</a>
+        </nav>
+
+        <main>
+            <div th:if="${errorMessage}" class="alert alert-error">
+                [[${errorMessage}]]
+            </div>
+
+            <div th:if="${article}" class="dashboard">
+                <h2 th:text="${article.title}">Название статьи</h2>
+
+                <div class="article-details">
+                    <p><strong>Авторы:</strong> <span th:text="${article.authors}"></span></p>
+
+                    <p th:if="${article.publicationYear}">
+                        <strong>Год издания:</strong> <span th:text="${article.publicationYear}"></span>
+                    </p>
+
+                    <p th:if="${article.topic}">
+                        <strong>Тема:</strong> <span th:text="${article.topic}"></span>
+                    </p>
+
+                    <p th:if="${article.keywords}">
+                        <strong>Ключевые слова:</strong> <span th:text="${article.keywords}"></span>
+                    </p>
+
+                    <p>
+                        <strong>Добавил:</strong>
+                        <a th:href="@{'/user/' + ${article.user.id}}"
+                            th:text="${article.user.username}">Пользователь</a>
+                    </p>
+
+                    <p>
+                        <strong>Дата загрузки:</strong>
+                        <!-- ИСПРАВЛЕННАЯ СТРОКА: используем #temporals для LocalDateTime -->
+                        <span th:text="${#temporals.format(article.uploadDate, 'dd.MM.yyyy HH:mm')}"></span>
+                    </p>
+
+                    <p th:if="${article.pdfFileName}">
+                        <strong>Файл:</strong> <span th:text="${article.pdfFileName}"></span>
+                        (<span th:text="${article.fileSize != null ? article.fileSize/1024 : 0}"></span> KB)
+                    </p>
+                </div>
+
+                <div class="article-actions" style="margin-top: 20px;">
+                    <a th:href="@{'/articles/download/' + ${article.id}}" class="btn btn-primary">📥 Скачать PDF</a>
+
+                    <div th:if="${isOwner}" style="display: inline-block; margin-left: 10px;">
+                        <a th:href="@{'/articles/edit/' + ${article.id}}" class="btn btn-warning">✏️ Редактировать</a>
+                        <form th:action="@{'/articles/delete/' + ${article.id}}" method="post" style="display: inline;"
+                            onsubmit="return confirm('Удалить статью?');">
+                            <button type="submit" class="btn btn-danger">🗑️ Удалить</button>
+                        </form>
+                    </div>
+
+                    <a th:href="@{/articles}" class="btn btn-secondary" style="margin-left: 10px;">
+                        ← Назад к списку
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

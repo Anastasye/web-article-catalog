@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой профиль</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📚 Каталог статей</h1>
+            <div class="auth-section">
+                <span sec:authentication="name"></span>
+                <a th:href="@{/logout}" class="btn btn-logout">Выйти</a>
+            </div>
+        </header>
+
+        <nav class="main-nav">
+            <a th:href="@{/}" class="nav-link">Главная</a>
+            <a th:href="@{/articles}" class="nav-link">Все статьи</a>
+            <a th:href="@{/articles/my}" class="nav-link">Мои статьи</a>
+            <a th:href="@{/articles/add}" class="nav-link">Добавить статью</a>
+            <a th:href="@{/user/profile}" class="nav-link active">Профиль</a>
+        </nav>
+
+        <main>
+            <section class="dashboard">
+                <h2>Мой профиль</h2>
+
+                <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+                <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+                <div class="profile-section">
+                    <div class="profile-header">
+                        <div class="avatar-section">
+                            <div class="avatar-placeholder" th:if="${user.avatarPath == null}">
+                                <span th:text="${user.fullName.substring(0, 1)}">?</span>
+                            </div>
+                            <img th:if="${user.avatarPath != null}" th:src="@{${user.avatarPath}}" alt="Аватар"
+                                class="avatar">
+
+                            <form th:action="@{/user/profile/upload-avatar}" method="post" enctype="multipart/form-data"
+                                class="avatar-form">
+                                <input type="file" name="avatarFile" accept="image/*" class="form-control">
+                                <button type="submit" class="btn btn-sm btn-primary">Загрузить аватар</button>
+                            </form>
+                        </div>
+
+                        <div class="profile-info">
+                            <h3 th:text="${user.fullName}">ФИО пользователя</h3>
+                            <p><strong>Логин:</strong> <span th:text="${user.username}"></span></p>
+                            <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+                            <p><strong>Дата регистрации:</strong>
+                                <span th:text="${formattedRegistrationDate}"></span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Форма обновления профиля -->
+                    <div class="update-profile">
+                        <h3>Редактировать профиль</h3>
+                        <form th:action="@{/user/profile/update}" method="post" th:object="${user}"
+                            class="profile-form">
+                            <div class="form-group">
+                                <label for="fullName">ФИО *</label>
+                                <input type="text" id="fullName" th:field="*{fullName}" required class="form-control">
+                                <div th:if="${#fields.hasErrors('fullName')}" class="error-message">
+                                    <span th:errors="*{fullName}"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email *</label>
+                                <input type="email" id="email" th:field="*{email}" required class="form-control">
+                                <div th:if="${#fields.hasErrors('email')}" class="error-message">
+                                    <span th:errors="*{email}"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Обновить профиль</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Статистика -->
+                    <div class="profile-stats">
+                        <h3>Моя статистика</h3>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <h4>Статей</h4>
+                                <p th:text="${user.articles != null ? user.articles.size() : 0}">0</p>
+                                <a th:href="@{/articles/my}">Просмотреть</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+    </div>
+</body>
+
+</html>

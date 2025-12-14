@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Все статьи</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📚 Каталог статей</h1>
+            <div class="auth-section">
+                <span sec:authentication="name"></span>
+                <a th:href="@{/logout}" class="btn btn-logout">Выйти</a>
+            </div>
+        </header>
+
+        <nav class="main-nav">
+            <a th:href="@{/}" class="nav-link">Главная</a>
+            <a th:href="@{/articles}" class="nav-link active">Все статьи</a>
+            <a th:href="@{/articles/my}" class="nav-link">Мои статьи</a>
+            <a th:href="@{/articles/add}" class="nav-link">Добавить статью</a>
+            <a th:href="@{/user/profile}" class="nav-link">Профиль</a>
+            <a th:href="@{/user/search}" class="nav-link">Поиск пользователей</a>
+        </nav>
+
+        <main>
+            <section class="dashboard">
+                <h2>Все статьи</h2>
+
+                <!-- 2.3 Система поиска -->
+                <div class="search-section">
+                    <form th:action="@{/articles}" method="get" class="search-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" name="author" th:value="${selectedAuthor}" placeholder="Автор..."
+                                    class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <select name="topic" class="form-control">
+                                    <option value="">Все темы</option>
+                                    <option th:each="topic : ${topics}" th:value="${topic}" th:text="${topic}"
+                                        th:selected="${topic == selectedTopic}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="keyword" th:value="${selectedKeyword}"
+                                    placeholder="Ключевые слова..." class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Найти</button>
+                                <a th:href="@{/articles}" class="btn btn-secondary">Сбросить</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Результаты поиска -->
+                <div class="articles-list">
+                    <div class="results-header">
+                        <h3>Найдено статей: <span th:text="${totalItems}">0</span></h3>
+                    </div>
+
+                    <div th:if="${articles.empty}" class="no-results">
+                        <p>Статьи не найдены. Попробуйте изменить критерии поиска.</p>
+                    </div>
+
+                    <div th:unless="${articles.empty}" class="articles-grid">
+                        <div th:each="article : ${articles}" class="article-card">
+                            <h4 th:text="${article.title}">Название статьи</h4>
+                            <p class="authors"><strong>Авторы:</strong> <span th:text="${article.authors}"></span></p>
+                            <p class="meta">
+                                <strong>Тема:</strong> <span th:text="${article.topic}">Тема</span> |
+                                <strong>Год:</strong> <span th:text="${article.publicationYear}">Год</span> |
+                                <strong>Добавил:</strong> <a th:href="@{'/user/' + ${article.user.id}}"
+                                    th:text="${article.user.username}">Пользователь</a>
+                            </p>
+                            <p class="keywords" th:if="${article.keywords}">
+                                <strong>Ключевые слова:</strong> <span th:text="${article.keywords}"></span>
+                            </p>
+                            <div class="article-actions">
+                                <a th:href="@{'/articles/view/' + ${article.id}}"
+                                    class="btn btn-sm btn-info">Подробнее</a>
+                                <a th:href="@{'/articles/download/' + ${article.id}}"
+                                    class="btn btn-sm btn-primary">Скачать PDF</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Пагинация -->
+                    <div th:if="${totalPages > 1}" class="pagination">
+                        <a th:if="${currentPage > 0}"
+                            th:href="@{/articles(page=${currentPage - 1}, author=${selectedAuthor}, topic=${selectedTopic}, keyword=${selectedKeyword})}"
+                            class="btn btn-sm">← Назад</a>
+
+                        <span class="page-info">
+                            Страница <span th:text="${currentPage + 1}">1</span> из <span
+                                th:text="${totalPages}">1</span>
+                        </span>
+
+                        <a th:if="${currentPage < totalPages - 1}"
+                            th:href="@{/articles(page=${currentPage + 1}, author=${selectedAuthor}, topic=${selectedTopic}, keyword=${selectedKeyword})}"
+                            class="btn btn-sm">Вперед →</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+    </div>
+</body>
+
+</html>

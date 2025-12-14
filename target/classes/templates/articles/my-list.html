@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои статьи</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Шапка -->
+        <header class="header">
+            <h1>📚 Каталог статей</h1>
+            <div class="auth-section">
+                <span th:text="${#authentication.name}">Пользователь</span>
+                <a th:href="@{/logout}" class="btn btn-logout">Выйти</a>
+            </div>
+        </header>
+
+        <!-- Навигация -->
+        <nav class="main-nav">
+            <a th:href="@{/}" class="nav-link">Главная</a>
+            <a th:href="@{/articles}" class="nav-link">Все статьи</a>
+            <a th:href="@{/articles/my}" class="nav-link active">Мои статьи</a>
+            <a th:href="@{/articles/add}" class="nav-link">Добавить статью</a>
+            <a th:href="@{/user/profile}" class="nav-link">Профиль</a>
+        </nav>
+
+        <!-- Основное содержимое -->
+        <main>
+            <section class="dashboard">
+                <h2>Мои статьи</h2>
+
+                <!-- Сообщения -->
+                <div th:if="${param.success}" class="alert alert-success">
+                    Статья успешно добавлена!
+                </div>
+                <div th:if="${param.error}" class="alert alert-error">
+                    Произошла ошибка: <span th:text="${param.error}"></span>
+                </div>
+                <div th:if="${errorMessage}" class="alert alert-error">
+                    [[${errorMessage}]]
+                </div>
+
+                <!-- Поиск -->
+                <div class="search-section">
+                    <form th:action="@{/articles/my}" method="get" class="search-form">
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 2;">
+                                <input type="text" name="query" th:value="${searchQuery}"
+                                    placeholder="Поиск по названию, авторам или ключевым словам..."
+                                    class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Найти</button>
+                                <a th:href="@{/articles/my}" class="btn btn-secondary">Сбросить</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Статистика -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Всего статей</h4>
+                        <p th:text="${userArticlesCount != null ? userArticlesCount : 0}">0</p>
+                    </div>
+                </div>
+
+                <!-- Результаты -->
+                <div class="articles-list">
+                    <div class="results-header">
+                        <h3>Найдено статей: <span th:text="${totalItems != null ? totalItems : 0}">0</span></h3>
+                        <a th:href="@{/articles/add}" class="btn btn-primary">+ Добавить статью</a>
+                    </div>
+
+                    <!-- Нет статей -->
+                    <div th:if="${articles != null && articles.empty}" class="no-results">
+                        <p>У вас еще нет статей. <a th:href="@{/articles/add}">Добавьте первую статью</a></p>
+                    </div>
+
+                    <!-- Список статей -->
+                    <div th:if="${articles != null && !articles.empty}" class="articles-grid">
+                        <div th:each="article : ${articles}" class="article-card">
+                            <h4 th:text="${article.title}">Название статьи</h4>
+                            <p class="authors">
+                                <strong>Авторы:</strong>
+                                <span th:text="${article.authors}"></span>
+                            </p>
+                            <p class="meta">
+                                <strong>Тема:</strong>
+                                <span th:text="${article.topic != null ? article.topic : 'Не указана'}"></span> |
+                                <strong>Год:</strong>
+                                <span
+                                    th:text="${article.publicationYear != null ? article.publicationYear : 'Не указан'}"></span>
+                            </p>
+                            <p class="keywords" th:if="${article.keywords != null && !article.keywords.isEmpty()}">
+                                <strong>Ключевые слова:</strong>
+                                <span th:text="${article.keywords}"></span>
+                            </p>
+                            <div class="article-actions">
+                                <a th:href="@{'/articles/view/' + ${article.id}}"
+                                    class="btn btn-sm btn-info">Просмотр</a>
+                                <a th:href="@{'/articles/edit/' + ${article.id}}"
+                                    class="btn btn-sm btn-warning">Редактировать</a>
+                                <a th:href="@{'/articles/download/' + ${article.id}}"
+                                    class="btn btn-sm btn-primary">Скачать PDF</a>
+                                <form th:action="@{'/articles/delete/' + ${article.id}}" method="post"
+                                    class="inline-form" onsubmit="return confirm('Удалить эту статью?');">
+                                    <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Пагинация -->
+                    <div th:if="${totalPages != null && totalPages > 1}" class="pagination">
+                        <a th:if="${currentPage > 0}"
+                            th:href="@{/articles/my(page=${currentPage - 1}, query=${searchQuery})}"
+                            class="btn btn-sm">← Назад</a>
+
+                        <span class="page-info">
+                            Страница <span th:text="${currentPage + 1}">1</span> из
+                            <span th:text="${totalPages}">1</span>
+                        </span>
+
+                        <a th:if="${currentPage < totalPages - 1}"
+                            th:href="@{/articles/my(page=${currentPage + 1}, query=${searchQuery})}"
+                            class="btn btn-sm">Вперед →</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📚 Каталог статей</h1>
+            <div class="auth-section">
+            </div>
+        </header>
+
+        <main class="auth-container">
+            <div class="auth-card">
+                <h2>Регистрация</h2>
+
+                <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+                <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+                <form th:action="@{/register}" method="post" th:object="${user}" class="auth-form">
+                    <div class="form-group">
+                        <label for="username">Логин *</label>
+                        <input type="text" id="username" th:field="*{username}" required class="form-control">
+                        <small>Минимум 3 символа</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" th:field="*{email}" required class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Пароль *</label>
+                        <input type="password" id="password" th:field="*{password}" required class="form-control">
+                        <small>Минимум 6 символов</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fullName">ФИО *</label>
+                        <input type="text" id="fullName" th:field="*{fullName}" required class="form-control">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Зарегистрироваться</button>
+                </form>
+
+                <div class="auth-links">
+                    <p>Уже есть аккаунт? <a th:href="@{/login}">Войдите</a></p>
+                    <p><a th:href="@{/}">Вернуться на главную</a></p>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

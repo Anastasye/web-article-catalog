@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в систему</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📚 Каталог статей</h1>
+            <div class="auth-section">
+            </div>
+        </header>
+
+        <main class="auth-container">
+            <div class="auth-card">
+                <h2>Вход в систему</h2>
+
+                <!-- Сообщения об ошибках -->
+                <div th:if="${param.error}" class="alert alert-error">
+                    Неверный логин или пароль
+                </div>
+                <div th:if="${param.logout}" class="alert alert-success">
+                    Вы успешно вышли из системы
+                </div>
+                <div th:if="${param.success}" class="alert alert-success">
+                    Регистрация успешна! Теперь вы можете войти в систему.
+                </div>
+
+                <!-- Форма входа Spring Security -->
+                <form th:action="@{/perform-login}" method="post" class="auth-form">
+                    <div class="form-group">
+                        <label for="username">Логин</label>
+                        <input type="text" id="username" name="username" required class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Пароль</label>
+                        <input type="password" id="password" name="password" required class="form-control">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Войти</button>
+                </form>
+
+                <div class="auth-links">
+                    <p>Нет аккаунта? <a th:href="@{/register}">Зарегистрируйтесь</a></p>
+                    <p><a th:href="@{/}">Вернуться на главную</a></p>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${viewedUser.fullName}">Профиль пользователя</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📚 Каталог статей</h1>
+            <div class="auth-section">
+                <span sec:authentication="name"></span>
+                <a th:href="@{/logout}" class="btn btn-logout">Выйти</a>
+            </div>
+        </header>
+
+        <nav class="main-nav">
+            <a th:href="@{/}" class="nav-link">Главная</a>
+            <a th:href="@{/articles}" class="nav-link">Все статьи</a>
+            <a th:href="@{/articles/my}" class="nav-link">Мои статьи</a>
+            <a th:href="@{/articles/add}" class="nav-link">Добавить статью</a>
+            <a th:href="@{/user/profile}" class="nav-link">Мой профиль</a>
+            <a th:href="@{/user/search}" class="nav-link">Поиск пользователей</a>
+        </nav>
+
+        <main>
+            <section class="dashboard">
+                <h2>Профиль пользователя</h2>
+
+                <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+                <div class="profile-section">
+                    <div class="profile-header">
+                        <div class="avatar-section">
+                            <div class="avatar-placeholder" th:if="${viewedUser.avatarPath == null}">
+                                <span th:text="${viewedUser.fullName.substring(0, 1)}">?</span>
+                            </div>
+                            <img th:if="${viewedUser.avatarPath != null}" th:src="@{${viewedUser.avatarPath}}"
+                                alt="Аватар" class="avatar">
+                        </div>
+
+                        <div class="profile-info">
+                            <h3 th:text="${viewedUser.fullName}">ФИО пользователя</h3>
+                            <p><strong>Логин:</strong> <span th:text="${viewedUser.username}"></span></p>
+                            <p th:if="${viewedUser.email}"><strong>Email:</strong> <span
+                                    th:text="${viewedUser.email}"></span></p>
+                            <p><strong>Дата регистрации:</strong>
+                                <span th:text="${formattedRegistrationDate}"></span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Статьи пользователя -->
+                    <div class="user-articles">
+                        <h3>Статьи пользователя</h3>
+
+                        <div th:if="${viewedUser.articles.empty}" class="no-articles">
+                            <p>У пользователя пока нет статей.</p>
+                        </div>
+
+                        <div th:unless="${viewedUser.articles.empty}" class="articles-grid">
+                            <div th:each="article : ${viewedUser.articles}" class="article-card">
+                                <h4 th:text="${article.title}">Название статьи</h4>
+                                <p class="authors"><strong>Авторы:</strong> <span th:text="${article.authors}"></span>
+                                </p>
+                                <p class="meta">
+                                    <strong>Тема:</strong> <span th:text="${article.topic}">Тема</span> |
+                                    <strong>Год:</strong> <span th:text="${article.publicationYear}">Год</span>
+                                </p>
+                                <p class="keywords" th:if="${article.keywords}">
+                                    <strong>Ключевые слова:</strong> <span th:text="${article.keywords}"></span>
+                                </p>
+                                <div class="article-actions">
+                                    <a th:href="@{'/articles/view/' + ${article.id}}"
+                                        class="btn btn-sm btn-info">Подробнее</a>
+                                    <!-- 2.4 Только библиографические данные, без скачивания PDF -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="back-link">
+                        <a th:href="@{/user/search}">← Вернуться к поиску пользователей</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+    </div>
+</body>
+
+</html>

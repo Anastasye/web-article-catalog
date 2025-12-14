@@ -1,0 +1,15 @@
+com\guap\articlecatalog\controller\ArticleController.class
+com\guap\articlecatalog\service\ArticleService.class
+com\guap\articlecatalog\service\UserService.class
+com\guap\articlecatalog\controller\UserController.class
+com\guap\articlecatalog\controller\AuthController.class
+com\guap\articlecatalog\service\impl\ArticleServiceImpl.class
+com\guap\articlecatalog\config\WebConfig.class
+com\guap\articlecatalog\model\User.class
+com\guap\articlecatalog\model\Article.class
+com\guap\articlecatalog\service\impl\UserServiceImpl.class
+com\guap\articlecatalog\repository\UserRepository.class
+com\guap\articlecatalog\repository\ArticleRepository.class
+com\guap\articlecatalog\controller\HomeController.class
+com\guap\articlecatalog\config\SecurityConfig.class
+com\guap\articlecatalog\ArticleCatalogApplication.class

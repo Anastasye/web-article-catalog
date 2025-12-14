@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить статью</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📚 Каталог статей</h1>
+            <div class="auth-section">
+                <span sec:authentication="name"></span>
+                <a th:href="@{/logout}" class="btn btn-logout">Выйти</a>
+            </div>
+        </header>
+
+        <nav class="main-nav">
+            <a th:href="@{/}" class="nav-link">Главная</a>
+            <a th:href="@{/articles}" class="nav-link">Все статьи</a>
+            <a th:href="@{/articles/my}" class="nav-link">Мои статьи</a>
+            <a th:href="@{/articles/add}" class="nav-link active">Добавить статью</a>
+            <a th:href="@{/user/profile}" class="nav-link">Профиль</a>
+        </nav>
+
+        <main>
+            <section class="dashboard">
+                <h2>Добавить новую статью</h2>
+
+                <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+                <form th:action="@{/articles/add}" method="post" enctype="multipart/form-data" class="article-form">
+
+                    <!-- PDF файл -->
+                    <div class="form-group">
+                        <label for="pdfFile">PDF файл статьи *</label>
+                        <input type="file" id="pdfFile" name="pdfFile" accept=".pdf" required class="form-control">
+                        <small>Максимальный размер: 10 MB. Только файлы в формате PDF.</small>
+                    </div>
+
+                    <!-- Название -->
+                    <div class="form-group">
+                        <label for="title">Название статьи *</label>
+                        <input type="text" id="title" name="title" required class="form-control"
+                            th:value="${article != null ? article.title : ''}">
+                    </div>
+
+                    <!-- Авторы -->
+                    <div class="form-group">
+                        <label for="authors">Авторы *</label>
+                        <input type="text" id="authors" name="authors" required class="form-control"
+                            th:value="${article != null ? article.authors : ''}">
+                    </div>
+
+                    <!-- Год -->
+                    <div class="form-group">
+                        <label for="publicationYear">Год издания</label>
+                        <input type="number" id="publicationYear" name="publicationYear" min="1900" max="2025"
+                            class="form-control" th:value="${article != null ? article.publicationYear : ''}">
+                    </div>
+
+                    <!-- Ключевые слова -->
+                    <div class="form-group">
+                        <label for="keywords">Ключевые слова</label>
+                        <input type="text" id="keywords" name="keywords" class="form-control"
+                            th:value="${article != null ? article.keywords : ''}">
+                    </div>
+
+                    <!-- Тема (упрощенная версия) -->
+                    <div class="form-group">
+                        <label for="topic">Тема/раздел</label>
+                        <input type="text" id="topic" name="topic" class="form-control"
+                            placeholder="Введите тему (например: Программирование, Наука, Образование)"
+                            th:value="${article != null ? article.topic : ''}">
+                        <small>Или выберите из списка ниже:</small>
+                        <div style="margin-top: 5px;">
+                            <select onchange="document.getElementById('topic').value = this.value;">
+                                <option value="">-- Выберите из списка --</option>
+                                <option th:each="topic : ${topics}" th:value="${topic}" th:text="${topic}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Сохранить статью</button>
+                        <a th:href="@{/articles/my}" class="btn btn-secondary">Отмена</a>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>

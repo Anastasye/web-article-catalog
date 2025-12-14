@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ошибка</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📚 Каталог статей</h1>
+            <div class="auth-section">
+                <a th:href="@{/}" class="btn btn-primary">На главную</a>
+            </div>
+        </header>
+
+        <main class="error-container">
+            <div class="error-card">
+                <h2>Произошла ошибка</h2>
+                <div class="alert alert-error">
+                    <p th:text="${error} ?: 'Неизвестная ошибка'">Неизвестная ошибка</p>
+                </div>
+                <div class="error-actions">
+                    <a th:href="@{/}" class="btn btn-primary">На главную</a>
+                    <a th:href="@{/articles/my}" class="btn btn-secondary">Мои статьи</a>
+                    <a th:href="@{/articles}" class="btn btn-info">Все статьи</a>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
