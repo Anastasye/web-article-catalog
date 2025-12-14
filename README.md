@@ -18,16 +18,11 @@
 - ✅ Публичные профили пользователей
 - ✅ Загрузка аватаров
 
-## Установка и запуск
+## Запуск
 
 ### Требования
 - Java 17+
 - Maven 3.6+
 
-### Шаги установки
-1. Клонировать репозиторий:
-```bash
-git clone https://github.com/your-username/web-article-catalog.git
 
-cd web-article-catalog
 
